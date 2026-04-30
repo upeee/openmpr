@@ -1,0 +1,31 @@
+Multimodal Product Retrieval (MPR) Challenge
+
+Dataset released under CC-BY-NC 4.0 license (https://physicalstoreworkshop.github.io/docs/LICENSE.pdf)
+
+- Challenge goal:
+The goal of MPR challenge is to retrieve the product identity from an open pool of candidate products. Participants will be given a training dataset consisting of (i) images for different products, and (ii) textual description of the products, and are expected to design methods to accurately retrieve the product identity by measuring similarity between images and textual descriptions. For evaluation, a held out set of probe images and a pool of textual description of catalog products will be passed to the model. The model is expected to output a ranked list of catalog products based on the similarity between images and descriptions. We use Cumulative Matching Characteristics (CMC) to determine the leaderboard.
+
+
+- Dataset size:
+Participants will be provided with 74,200 images as training set. Additionally, a json file containing textual description of the corresponding catalog products is provided. The mapping between images and descriptions are performed using barcodes.
+
+- Data format:
+Each image file name contains the barcode of the corresponding product which is considered as the ID for matching. The file name follows the format: 'barcode_cntr.jpg', where 'barcode' is the actual unique barcode of the product, 'cntr' represent the image counter for the product.
+The textual description is a dictionary that is keyed by the barcode. For each image, the corresponding barcode can be used to find the description.
+
+- Submission:
+Once completed, please submit all the files to run your proposed model as a zip file, or a download link to weijianl@amazon.com. 
+
+Please provide a Python inference code (and model weights) and instructions to setup the environment. We will run your inference code on a held-out test set:
+
+```
+python infer.py --images ${path to probe images(jpg)} --catalog ${catalog_texts.json} --output ${file containing an ordering of candidate products}. 
+```
+
+We run the inference on each set of product images in our evaluation dataset.
+
+Input: the model should take in a folder containing jpg images of a product, plus a json file containing the description of catalog products.
+
+Output: For each execution of inference, we expect a txt output file which contains the ordering of candidate products for the given probe images. In the resulting txt file, the ranked list of products is stored, one barcode per row.
+
+

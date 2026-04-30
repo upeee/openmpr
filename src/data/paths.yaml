@@ -1,0 +1,6 @@
+mpr_dataset:
+  path_to_images: /data/students/manny/GroceryVisionChallenge/mpr_challenge/appearance_based
+  path_to_labels: src/data/product_texts.json
+
+synthetic:
+  path_to_synthetic_labels: src/data/synthetic/synthetic_labels_meta-llama-3.1-8b-instruct.json
