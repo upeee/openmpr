@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "OpenMPR"
+authors:
+  - family-names: Maminta
+    given-names: Emmanuel G.
+  - family-names: Atienza
+    given-names: Rowel O.
+repository-code: "https://github.com/upeee/openmpr"
+license: Apache-2.0
+preferred-citation:
+  type: conference-paper
+  title: "What Matters for Grocery Product Retrieval with Open Source Vision Language Models"
+  authors:
+    - family-names: Maminta
+      given-names: Emmanuel G.
+    - family-names: Atienza
+      given-names: Rowel O.
+  collection-title: "Proceedings of the International Conference on Pattern Recognition (ICPR)"
+  year: 2026

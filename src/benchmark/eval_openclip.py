@@ -1,9 +1,19 @@
+import argparse
+import os
+
 import torch
 import open_clip
 from tqdm import tqdm
 import json
+import yaml
 from PIL import Image
 
+
+parser = argparse.ArgumentParser(description="Evaluate OpenCLIP checkpoints on the GroceryVision MPR benchmark. Run from the repository root.")
+parser.add_argument("--model", default=None, help="Evaluate a single architecture, e.g. RN50 (default: all checkpoints)")
+parser.add_argument("--pretrained", default=None, help="Pretraining tag to pair with --model, e.g. openai")
+parser.add_argument("--data-config", default="src/data/paths.yaml", help="YAML file with dataset paths")
+args = parser.parse_args()
 
 skipped_models = []
 
@@ -12,11 +22,42 @@ eval_dataset_path = "src/data/barcode_to_images_map.json"
 with open(eval_dataset_path, "r") as f:
     main_catalogue = json.load(f)
 
+with open(args.data_config, "r") as f:
+    dataset_root = yaml.safe_load(f)["mpr_dataset"]["path_to_images"]
+
+# Image paths in the map are relative to the dataset root.
+for barcode in main_catalogue:
+    main_catalogue[barcode]["image_paths"] = [
+        os.path.join(dataset_root, p) for p in main_catalogue[barcode]["image_paths"]
+    ]
+
+probe_image = next(iter(main_catalogue.values()))["image_paths"][0]
+if not os.path.isfile(probe_image):
+    raise SystemExit(
+        f"Dataset not found: '{probe_image}' does not exist.\n"
+        f"Run 'bash scripts/download_data.sh' or point mpr_dataset.path_to_images in "
+        f"{args.data_config} at your extracted appearance_based/ directory. "
+        f"See README, 'Get the data'."
+    )
+
 print(f"Loaded {len(main_catalogue)} barcodes from the evaluation dataset.")
 
 labels = [main_catalogue[barcode]["label"] for barcode in main_catalogue.keys()]
 
+# Results dirs must exist before the per-model try/except below, otherwise
+# every model would fail at save time and be reported as skipped.
+os.makedirs("src/benchmark/results/micro_cmc", exist_ok=True)
+os.makedirs("src/benchmark/results/macro_cmc", exist_ok=True)
+
 all_openclip_models = open_clip.list_pretrained()
+
+if args.model is not None:
+    all_openclip_models = [
+        (m, t) for (m, t) in all_openclip_models
+        if m == args.model and (args.pretrained is None or t == args.pretrained)
+    ]
+    if not all_openclip_models:
+        raise SystemExit(f"No checkpoint matches --model {args.model} --pretrained {args.pretrained}")
 
 model_nparams = {}
 

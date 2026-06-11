@@ -1,0 +1,10 @@
+[
+    {
+        "model_name": "open_clip/ViT-L-14-worldwide--metaclip2_worldwide",
+        "error": "Failed to download weights for tag 'metaclip2_worldwide': Failed to download file (open_clip_pytorch_model.bin) for timm/vit_large_patch14_clip_224.metaclip2_worldwide. Last error: 404 Client Error. (Request ID: Root=1-68b9caf8-0f2eed453b807d237563aa9e;2176c358-94e6-40fc-aec9-9b6adf18b7a1)\n\nRepository Not Found for url: https://huggingface.co/timm/vit_large_patch14_clip_224.metaclip2_worldwide/resolve/main/open_clip_pytorch_model.bin.\nPlease make sure you specified the correct `repo_id` and `repo_type`.\nIf you are trying to access a private or gated repo, make sure you are authenticated. For more details, see https://huggingface.co/docs/huggingface_hub/authentication"
+    },
+    {
+        "model_name": "open_clip/ViT-L-14-worldwide-quickgelu--metaclip2_worldwide",
+        "error": "Failed to download weights for tag 'metaclip2_worldwide': Failed to download file (open_clip_pytorch_model.bin) for timm/vit_large_patch14_clip_224.metaclip2_worldwide. Last error: 404 Client Error. (Request ID: Root=1-68ba9af4-2830f98534c2b92d70a56341;f92fd181-eed1-4b0c-ac39-210a49fa4a65)\n\nRepository Not Found for url: https://huggingface.co/timm/vit_large_patch14_clip_224.metaclip2_worldwide/resolve/main/open_clip_pytorch_model.bin.\nPlease make sure you specified the correct `repo_id` and `repo_type`.\nIf you are trying to access a private or gated repo, make sure you are authenticated. For more details, see https://huggingface.co/docs/huggingface_hub/authentication"
+    }
+]

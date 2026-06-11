@@ -8,7 +8,7 @@ This page covers datasets relevant to multimodal product retrieval (MPR) researc
 
 ### GroceryVision Challenge (2025)
 
-The dataset used in OpenMPR. 74,200 training images across 409 SKUs, subsampled to 12,944 front-facing perspectives for evaluation. Evaluation follows a single-gallery-shot protocol: one text description per SKU, no query-side images in the gallery. This makes the task harder than multi-shot retrieval — the model has no visual reference to fall back on. License: CC-BY-NC 4.0. Organized by the GroceryVision Challenge 2025.
+The dataset used in OpenMPR. 74,200 training images across 409 SKUs, subsampled to 20,565 front-facing images for evaluation (17,516 front-view, plus 3,049 front-drop for SKUs lacking front-view frames). Evaluation follows a single-gallery-shot protocol: one text description per SKU, no query-side images in the gallery. This makes the task harder than multi-shot retrieval — the model has no visual reference to fall back on. License: CC-BY-NC 4.0. Organized by the GroceryVision Challenge 2025.
 
 ### MIMEX (Tur et al., 2024)
 

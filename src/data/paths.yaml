@@ -1,5 +1,9 @@
 mpr_dataset:
-  path_to_images: /data/students/manny/GroceryVisionChallenge/mpr_challenge/appearance_based
+  # Root of the extracted GroceryVision MPR dataset (the appearance_based/ directory).
+  # scripts/download_data.sh places it at data/mpr_challenge/appearance_based.
+  # If you already have the dataset elsewhere, point path_to_images at your copy.
+  # Image paths in src/data/barcode_to_images_map.json are relative to this root.
+  path_to_images: data/mpr_challenge/appearance_based
   path_to_labels: src/data/product_texts.json
 
 synthetic:

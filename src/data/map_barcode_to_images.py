@@ -1,3 +1,15 @@
+"""Build the evaluation manifest (barcode_to_images_map.json) from the extracted dataset.
+
+Run from the repository root. Stores image paths relative to
+mpr_dataset.path_to_images from src/data/paths.yaml.
+
+The tracked manifest was converted from the original evaluation run by
+stripping the dataset-root prefix, preserving the original path ordering.
+Regenerating with this script yields the same path set per barcode, but
+glob enumeration order may differ across filesystems (sorted here for
+determinism). Ordering has no effect on the metrics.
+"""
+
 import json
 import os
 from glob import glob
@@ -45,16 +57,18 @@ no_matching_files_in_front_view = []
 barcodes = list(barcode_to_image_filepaths.keys())
 
 for barcode in tqdm(barcodes, desc="Mapping barcodes to images in front view"):
-    matching_files = glob(os.path.join(single_frame_front_view_path, f"*{barcode}*"))
+    matching_files = sorted(glob(os.path.join(single_frame_front_view_path, f"*{barcode}*")))
     if matching_files:
-        barcode_to_image_filepaths[barcode].extend(matching_files)
+        barcode_to_image_filepaths[barcode].extend(
+            os.path.relpath(p, path_to_images) for p in matching_files)
     else:
         no_matching_files_in_front_view.append(barcode)
 
 for barcode in tqdm(no_matching_files_in_front_view, desc="Mapping remaining barcodes to front drop images"):
-    matching_files = glob(os.path.join(single_frame_front_drop_path, f"*{barcode}*"))
+    matching_files = sorted(glob(os.path.join(single_frame_front_drop_path, f"*{barcode}*")))
     if matching_files:
-        barcode_to_image_filepaths[barcode].extend(matching_files)
+        barcode_to_image_filepaths[barcode].extend(
+            os.path.relpath(p, path_to_images) for p in matching_files)
     else:
         raise FileNotFoundError(f"No matching files found for barcode {barcode} in front drop images")
 
@@ -87,10 +101,10 @@ for barcode, filepaths in barcode_to_image_filepaths.items():
 
 sorted_data_statistics = dict(sorted(data_statistics.items(), key=lambda item: item[1]['num_images'], reverse=True))
 
-with open("barcode_to_images_statistics.json", "w") as f:
+with open("src/data/barcode_to_images_statistics.json", "w") as f:
     json.dump(sorted_data_statistics, f, indent=4)
 
-print("Data statistics saved to 'barcode_to_images_statistics.json'")
+print("Data statistics saved to 'src/data/barcode_to_images_statistics.json'")
 print("Showing data statistics:")
 for barcode, stats in sorted_data_statistics.items():
     print(f"Barcode: {barcode}, Label: {stats['label']}, Number of Images: {stats['num_images']}")
@@ -103,5 +117,5 @@ for barcode, filepaths in barcode_to_image_filepaths.items():
         "label": synthetic_label_dict.get(barcode, "")
     }
 
-with open("barcode_to_images_map.json", "w") as f:
+with open("src/data/barcode_to_images_map.json", "w") as f:
     json.dump(eval_dataset, f, indent=4)
