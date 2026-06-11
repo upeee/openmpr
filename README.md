@@ -96,6 +96,8 @@ The results reported in the paper are tracked in [`results/`](results/README.md)
 
 Your reruns write to `src/benchmark/results/` and never overwrite the reference. Inference is not bit-deterministic (CUDA kernel selection varies across runs and hardware): re-running `RN50/openai` on the same A100 model reproduced the reference micro Recall@K within at most 16 flipped ranks out of 20,565 images (±0.08 percentage points). The compare script checks micro Recall@K and the per-SKU macro means against a 0.005 tolerance.
 
+The paper's semantic power density metric (φ) is recomputed from the summary CSV with `python scripts/compute_phi.py` (MobileCLIP-B: φ = 2.37). A mapping from each headline paper claim to the exact rows/files that support it is in [`results/README.md`](results/README.md).
+
 ---
 
 ## Repository structure
@@ -103,23 +105,27 @@ Your reruns write to `src/benchmark/results/` and never overwrite the reference.
 ```
 src/
   benchmark/
-    eval_openclip.py           # Main evaluation script (190 models)
-    results/                   # Your reruns land here (not tracked)
+    eval_openclip.py             # Main evaluation script (190 models)
+    results/                     # Your reruns land here (not tracked)
   data/
-    barcode_to_images_map.json # Evaluation manifest: relative image paths + label per SKU
-    paths.yaml                 # Dataset location config
-    product_texts.json         # Original catalog descriptions
-    synthetic/                 # LLM-compressed descriptions (≤77 tokens) used as labels
-  analysis/                    # Notebook reproducing the paper's analysis figures
-results/                       # Published reference results (see results/README.md)
+    barcode_to_images_map.json   # Evaluation manifest: relative image paths + label per SKU
+    barcode_to_images_statistics.json  # Per-SKU image counts
+    map_barcode_to_images.py     # Regenerates the manifest from the raw dataset
+    paths.yaml                   # Dataset location config
+    product_texts.json           # Original catalog descriptions
+    synthetic/                   # LLM compression of descriptions to ≤77 tokens (outputs included)
+  analysis/                      # Notebook reproducing the paper's analysis figures
+  README_MPR                     # Original GroceryVision challenge brief
+results/                         # Published reference results (see results/README.md)
 scripts/
-  download_data.sh             # Dataset download + extraction
-  compare_results.py           # Compare a rerun against the reference results
-data/                          # Dataset lives here after download (not tracked)
+  download_data.sh               # Dataset download + extraction
+  compare_results.py             # Compare a rerun against the reference results
+  compute_phi.py                 # Semantic power density (phi) from the summary CSV
+data/                            # Dataset lives here after download (not tracked)
 docs/
-  HOW-TO-MPR.md                # Task formulation, metrics, the gap
-  DATASETS.md                  # Datasets for MPR research
-  LITERATURE.md                # Curated reference list
+  HOW-TO-MPR.md                  # Task formulation, metrics, the gap
+  DATASETS.md                    # Datasets for MPR research
+  LITERATURE.md                  # Curated reference list
 ```
 
 The analysis notebook (`src/analysis/analysis.ipynb`) reproduces the paper's figures from `results/`; it needs `pandas`, `matplotlib`, and `jupyter` on top of `requirements.txt` and is not required for reproducing the benchmark numbers.

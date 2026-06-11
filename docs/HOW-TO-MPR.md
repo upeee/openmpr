@@ -58,7 +58,7 @@ where $Q$ is the total number of probe images and $gt_q$ is the ground-truth des
 - **Micro Recall@K**: counts correct retrievals across all probe images uniformly. SKUs with more images contribute more to the score. This is the primary metric used in the ICPR 2026 paper.
 - **Macro Recall@K**: averages per-SKU accuracy first, then averages across SKUs. Gives equal weight to each product regardless of how many images it has. Useful for detecting whether rare or hard products are being systematically missed.
 
-The GroceryVision dataset has 20,565 front-facing images across 409 SKUs (17,516 front-view, plus 3,049 front-drop for SKUs lacking front-view frames), roughly 50 images per product on average. All released metrics are computed over this 20,565-image manifest, shipped in `src/data/barcode_to_images_map.json`. The paper's dataset section cites 12,944 images; the shipped manifest is authoritative for every reported number.
+The GroceryVision dataset has 20,565 front-facing images across 409 SKUs (17,516 front-view, plus 3,049 front-drop for SKUs lacking front-view frames), roughly 50 images per product on average. All released metrics are computed over this 20,565-image manifest, shipped in `src/data/barcode_to_images_map.json`.
 
 ---
 
@@ -102,8 +102,8 @@ Treating retrieval accuracy as a signal amplitude and borrowing from signal proc
 
 $$\phi = \frac{\left(\dfrac{\text{Recall@1}}{1 - \text{Recall@1} + \epsilon}\right)^2}{N_{\text{params}}} \times 100$$
 
-with $\epsilon = 10^{-6}$. The squared SNR term grows super-linearly above the 50% threshold, penalizing sub-threshold models regardless of parameter efficiency.
+with $\epsilon = 10^{-6}$, Recall@1 the micro Recall@1, and $N_{\text{params}}$ the parameter count **in millions**. The squared SNR term grows super-linearly above the 50% threshold, penalizing sub-threshold models regardless of parameter efficiency. `scripts/compute_phi.py` recomputes $\phi$ for all 190 models from `results/benchmark_summary.csv`.
 
-MobileCLIP-B achieves $\phi = 2.37$, the highest among models with Recall@1 > 65%. A 1.8B-parameter SigLIP2 model achieves only $\phi = 0.60$ despite higher absolute accuracy.
+MobileCLIP-B (DataCompDR, 150M) achieves $\phi = 2.37$, the highest among models with Recall@1 > 65%; the smaller MobileCLIP-S1 reaches $\phi = 2.82$ at lower absolute accuracy (60.8% Recall@1). A 1.9B-parameter SigLIP2 model achieves only $\phi = 0.60$ despite higher absolute accuracy.
 
 For edge deployment: prioritize Recall@K for coverage, then validate $\phi$ for efficiency.
