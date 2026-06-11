@@ -1,11 +1,11 @@
 # OpenMPR
 
-We benchmarked 190 open-source VLMs on the GroceryVision Challenge MPR track. The best models reach 94% Recall@5 on grocery product retrieval but only 77% Recall@1 (Maminta & Atienza, ICPR 2026). They narrow a 409-SKU catalog to a handful of candidates. Picking the right one from that shortlist is where they fail.
+We benchmarked 190 open-source VLMs on the GroceryVision Challenge MPR track. The best models reach 94.5% Recall@5 on grocery product retrieval but only 77.0% Recall@1 (Maminta & Atienza, ICPR 2026). They narrow a 409-SKU catalog to a handful of candidates. Picking the right one from that shortlist is where they fail.
 
 OpenMPR is the code and data behind that benchmark. Three things stood out:
 
-1. Data quality beats scale. Moving from raw web scrapes to filtered training data delivers up to 16% Recall@1 gains. Doubling model parameters on noisy data delivers almost nothing.
-2. Small can beat large. MobileCLIP-B (150M parameters) outperforms 350M competitors trained on unfiltered data.
+1. Data quality beats scale. Moving from raw web scrapes to filtered training data delivers up to 16.6% Recall@1 gains. Doubling model parameters on noisy data delivers almost nothing.
+2. Small can beat large. MobileCLIP-B (150M parameters) outperforms 351M competitors trained on unfiltered data.
 3. The ranking gap is a geometry problem. Contrastive embeddings cluster product categories well but collapse visually similar SKU variants into nearly identical vectors (about 4 degrees apart in embedding space). That geometry failure is what the 17.5-point gap between Recall@5 and Recall@1 measures.
 
 Detailed results are in our ICPR 2026 paper.
@@ -58,7 +58,7 @@ The pinned `torch==2.8.0` wheel on PyPI is the CUDA 12.8 build on Linux; no extr
 bash scripts/download_data.sh
 ```
 
-This downloads the GroceryVision MPR dataset (8 GB, CC-BY-NC 4.0) and extracts it to `data/mpr_challenge/`. Expected layout:
+This downloads the MPR dataset of the [4th GroceryVision Challenge](https://grocery-vision.github.io/past_challenge/iccv2025.html) (ICCV 2025 RetailVision Workshop) — 8 GB, CC-BY-NC 4.0 — and extracts it to `data/mpr_challenge/`. Expected layout:
 
 ```
 data/mpr_challenge/
@@ -137,7 +137,7 @@ The analysis notebook (`src/analysis/analysis.ipynb`) reproduces the paper's fig
 }
 ```
 
-Release [v1.0.0](https://github.com/upeee/openmpr/releases/tag/v1.0.0) is the snapshot prepared for the ICPR 2026 Reproducible Research badge review. The repository is archived on [Software Heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/upeee/openmpr); the reviewed revision has the persistent identifier `swh:1:rev:d191e054a01762efed789a050a89b9afda8429c1`.
+Release [v1.0.0](https://github.com/upeee/openmpr/releases/tag/v1.0.0) is the snapshot prepared for the ICPR 2026 Reproducible Research badge review. The repository is archived on [Software Heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/upeee/openmpr); the persistent identifiers (SWHID) of the archived snapshot and the reviewed revision are listed in the release notes and resolvable through the archive.
 
 ---
 

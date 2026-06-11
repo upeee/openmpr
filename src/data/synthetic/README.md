@@ -78,5 +78,5 @@ This directory contains scripts and configurations for generating synthetic data
    - Use the synthetic descriptions in the multi-product retrieval task instead of the original descriptions.
 
 ### Human evaluation results
-- A sample of 409 synthetic descriptions was manually evaluated.
-- 100% of the synthetic descriptions were found to be relevant, informative, and concise within the 77-token limit. Descriptions consistently started with *"The product is ..."* as instructed.
+- A random sample of 250 of the 409 synthetic descriptions (61% of the catalog) was manually evaluated in two independent passes using different random seeds.
+- On this sample, 100% of the descriptions met the 77-token limit and retained the key visual attributes (color, shape, brand, size) from the source metadata, with no hallucinations identified. Descriptions consistently started with *"The product is ..."* as instructed.
