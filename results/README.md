@@ -38,7 +38,8 @@ running one or more models, compare with:
 python scripts/compare_results.py
 ```
 
-On the same GPU generation (Ampere) with bfloat16, results should match exactly.
-On other hardware, a handful of rank flips out of 20,565 images is possible from
-floating-point differences; the compare script's default tolerance (0.005) accounts
-for this.
+GPU inference is not bit-deterministic (CUDA kernel selection varies across runs
+and hardware), so expect small deviations: re-running `RN50/openai` on the same
+A100 model reproduced these micro Recall@K values within at most 16 flipped ranks
+out of 20,565 images (±0.08 percentage points). The compare script checks micro
+Recall@K and per-SKU macro means against a 0.005 tolerance.

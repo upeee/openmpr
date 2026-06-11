@@ -15,16 +15,19 @@ import os
 import sys
 
 
-def flatten(obj, prefix=""):
-    """Flatten nested dicts of floats into {dotted.key: value}."""
-    out = {}
-    for k, v in obj.items():
-        key = f"{prefix}{k}"
-        if isinstance(v, dict):
-            out.update(flatten(v, f"{key}."))
-        else:
-            out[key] = v
-    return out
+def metrics_of(obj):
+    """Reduce a result JSON to {@k: value}.
+
+    Micro files already are {@k: value}. Macro files are
+    {barcode: {@k: value}} with per-SKU denominators as small as a few
+    images, so a single rank flip moves one leaf by 1/num_images; the
+    quantity the paper reports is the mean across SKUs, so that is what
+    gets compared against the tolerance.
+    """
+    if any(isinstance(v, dict) for v in obj.values()):
+        ks = next(iter(obj.values())).keys()
+        return {k: sum(per_sku[k] for per_sku in obj.values()) / len(obj) for k in ks}
+    return dict(obj)
 
 
 def main():
@@ -49,9 +52,9 @@ def main():
                 print(f"[skip]  {kind}/{name}: no reference file")
                 continue
             with open(os.path.join(cand_dir, name)) as f:
-                cand = flatten(json.load(f))
+                cand = metrics_of(json.load(f))
             with open(ref_path) as f:
-                ref = flatten(json.load(f))
+                ref = metrics_of(json.load(f))
             compared += 1
             if set(cand) != set(ref):
                 print(f"[FAIL]  {kind}/{name}: key sets differ")

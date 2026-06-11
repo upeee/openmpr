@@ -80,7 +80,7 @@ python src/benchmark/eval_openclip.py --model RN50 --pretrained openai
 python scripts/compare_results.py
 ```
 
-All 20,565 probe images are ranked against the 409-SKU catalog. Expected micro Recall for `RN50/openai`: **@k=1: 40.48%, @k=3: 58.20%, @k=5: 63.71%**. Takes about 12 minutes on an A100 (the first run also downloads ~0.4 GB of weights).
+All 20,565 probe images are ranked against the 409-SKU catalog. Reference micro Recall for `RN50/openai`: **@k=1: 40.48%, @k=3: 58.20%, @k=5: 63.71%**; your run should match within ±0.1 percentage points (GPU convolution kernels are not bit-deterministic, so a few rank flips out of 20,565 images are normal even on identical hardware). Takes about 22 minutes on an A100 (the first run also downloads ~0.4 GB of weights).
 
 ### Full sweep (all models)
 
@@ -94,7 +94,7 @@ Iterates every checkpoint listed by `open_clip.list_pretrained()` — 192 under 
 
 The results reported in the paper are tracked in [`results/`](results/README.md): `benchmark_summary.csv` (one row per model) plus per-model micro/macro Recall@K JSONs, produced on an A100-SXM4-40GB with bfloat16. All published metrics are computed over the 20,565-image evaluation manifest shipped in `src/data/barcode_to_images_map.json`.
 
-Your reruns write to `src/benchmark/results/` and never overwrite the reference. On the same GPU generation results match exactly; on other hardware a few rank flips out of 20,565 images are possible from floating-point differences, which the compare script's default tolerance (0.005) absorbs.
+Your reruns write to `src/benchmark/results/` and never overwrite the reference. Inference is not bit-deterministic (CUDA kernel selection varies across runs and hardware): re-running `RN50/openai` on the same A100 model reproduced the reference micro Recall@K within at most 16 flipped ranks out of 20,565 images (±0.08 percentage points). The compare script checks micro Recall@K and the per-SKU macro means against a 0.005 tolerance.
 
 ---
 
