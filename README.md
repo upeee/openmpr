@@ -137,6 +137,8 @@ The analysis notebook (`src/analysis/analysis.ipynb`) reproduces the paper's fig
 }
 ```
 
+Release [v1.0.0](https://github.com/upeee/openmpr/releases/tag/v1.0.0) is the snapshot prepared for the ICPR 2026 Reproducible Research badge review. The repository is archived on [Software Heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/upeee/openmpr); the reviewed revision has the persistent identifier `swh:1:rev:d191e054a01762efed789a050a89b9afda8429c1`.
+
 ---
 
 ## License
